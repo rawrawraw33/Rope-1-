@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class FoodGenerator : MonoBehaviour
 {
     public GameObject objectPrefab;
@@ -18,6 +17,8 @@ public class FoodGenerator : MonoBehaviour
 
     void GenerateObjects()
     {
+        GameObject foodCreator = new GameObject("FoodCreator"); // Создаем пустой объект FoodCreator
+
         for (int i = 0; i < numberOfObjects; i++)
         {
             float x = Random.Range(spawnRangeX.x, spawnRangeX.y);
@@ -25,13 +26,17 @@ public class FoodGenerator : MonoBehaviour
 
             Vector3 spawnPosition = new Vector3(x, 0.12f, z);
 
-            Instantiate(objectPrefab, spawnPosition, Quaternion.identity);
+            // Создаем объекты внутри иерархии FoodCreator
+            GameObject foodObject = Instantiate(objectPrefab, spawnPosition, Quaternion.identity);
+
+            // Делаем созданный объект дочерним для FoodCreator
+            foodObject.transform.parent = foodCreator.transform;
         }
     }
-       private void OnDrawGizmosSelected()
+
+    private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red; // Выберите желаемый цвет границ
         Gizmos.DrawWireCube(transform.position, new Vector3(spawnArea.x, 0.1f, spawnArea.y));
     }
-    
 }
