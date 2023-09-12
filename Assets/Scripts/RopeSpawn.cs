@@ -6,10 +6,10 @@ public class RopeSpawn : MonoBehaviour
 {
     [SerializeField]
     GameObject partPrefab, parentObject;
-    
+
     [SerializeField]
     [Range(1, 1000)]
-    int length = 5;
+    int length = 1;
 
     [SerializeField]
     float partDistance = 0.21f;
@@ -19,9 +19,7 @@ public class RopeSpawn : MonoBehaviour
 
     void Start()
     {
-        // Устанавливаем spawn в true при старте игры, чтобы создать веревку из одной части
         spawn = true;
-        length = 5;
     }
 
     void Update()
@@ -47,14 +45,15 @@ public class RopeSpawn : MonoBehaviour
     public void Spawn()
     {
         int count = (int)(length);
+        GameObject previousSegment = null; // Переменная для хранения предыдущего сегмента
+
         for (int x = 0; x < count; x++)
         {
             GameObject tmp;
             tmp = Instantiate(partPrefab, new Vector3(transform.position.x, transform.position.y + partDistance * (x + 1), transform.position.z), Quaternion.identity, parentObject.transform);
             tmp.transform.eulerAngles = new Vector3(180, 0, 0);
             tmp.name = parentObject.transform.childCount.ToString();
-            
-            // Добавить скрипт RopeCollisionHandler только к первому элементу
+
             if (x == 0)
             {
                 Destroy(tmp.GetComponent<CharacterJoint>());
@@ -63,22 +62,33 @@ public class RopeSpawn : MonoBehaviour
                     tmp.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
                     PlayerController script = tmp.AddComponent<PlayerController>();
                 }
-                
-                PlayerController moveScript = tmp.AddComponent<PlayerController>();
-                moveScript.moveSpeed = 5.0f; // Настройте скорость движения по вашему усмотрению
 
-                // Добавляем скрипт RopeCollisionHandler к первому элементу
+                PlayerController moveScript = tmp.AddComponent<PlayerController>();
+                moveScript.moveSpeed = 5.0f;
+
                 RopeCollisionHandler collisionHandler = tmp.AddComponent<RopeCollisionHandler>();
-                collisionHandler.Part = partPrefab; // Устанавливаем префаб сегмента в скрипте RopeCollisionHandler
+                collisionHandler.Part = partPrefab;
+
+                // Сохраняем первый сегмент в переменной previousSegment
+                previousSegment = tmp;
             }
             else
             {
-                tmp.GetComponent<CharacterJoint>().connectedBody = parentObject.transform.Find((parentObject.transform.childCount - 1).ToString()).GetComponent<Rigidbody>();
+                if (previousSegment != null)
+                {
+                    tmp.GetComponent<CharacterJoint>().connectedBody = previousSegment.GetComponent<Rigidbody>();
+                    previousSegment = tmp; // Обновляем previousSegment на текущий сегмент
+                }
             }
         }
+
         if (snapLast)
         {
-            parentObject.transform.Find((parentObject.transform.childCount).ToString()).GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+            if (previousSegment != null)
+            {
+                parentObject.transform.Find((parentObject.transform.childCount).ToString()).GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+            }
         }
     }
+
 }

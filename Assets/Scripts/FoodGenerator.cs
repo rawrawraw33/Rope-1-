@@ -39,4 +39,6 @@ public class FoodGenerator : MonoBehaviour
         Gizmos.color = Color.red; // Выберите желаемый цвет границ
         Gizmos.DrawWireCube(transform.position, new Vector3(spawnArea.x, 0.1f, spawnArea.y));
     }
+
+    
 }
