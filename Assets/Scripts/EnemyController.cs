@@ -44,7 +44,14 @@ public class EnemyController : MonoBehaviour
                 FindNextFoodTarget();
             }
         }
+        else
+        {
+            // Если больше нет объектов с едой, сбрасываем текущую цель
+            // и продолжаем двигаться в том же направлении, если есть другие цели
+            FindNextFoodTarget();
+        }
     }
+
 
     void FindNextFoodTarget()
     {
@@ -56,12 +63,16 @@ public class EnemyController : MonoBehaviour
 
             foreach (Transform foodTarget in foodTargets)
             {
-                float distance = Vector3.Distance(transform.position, foodTarget.position);
-
-                if (distance < closestDistance)
+                // Проверяем, что foodTarget не равен null, чтобы избежать ошибки
+                if (foodTarget != null)
                 {
-                    closestFood = foodTarget;
-                    closestDistance = distance;
+                    float distance = Vector3.Distance(transform.position, foodTarget.position);
+
+                    if (distance < closestDistance)
+                    {
+                        closestFood = foodTarget;
+                        closestDistance = distance;
+                    }
                 }
             }
 
@@ -73,6 +84,7 @@ public class EnemyController : MonoBehaviour
             currentFoodTarget = null;
         }
     }
+
 
 
 
@@ -153,11 +165,7 @@ public class EnemyController : MonoBehaviour
                         // Можно вывести отладочное сообщение или предпринять другие действия по вашему усмотрению
                     }
                 }
-                else
-                {
-                    // Если компонент CharacterJoint отсутствует на новом сегменте, нужно обработать этот случай
-                    // Можно вывести отладочное сообщение или предпринять другие действия по вашему усмотрению
-                }
+
 
                 // Присоединяем новый сегмент к предыдущему
                 newSegment.GetComponent<CharacterJoint>().connectedBody = lastSegment.GetComponent<Rigidbody>();

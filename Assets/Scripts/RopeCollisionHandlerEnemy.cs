@@ -75,11 +75,7 @@ public class RopeCollisionHandlerEnemy : MonoBehaviour
                         // Можно вывести отладочное сообщение или предпринять другие действия по вашему усмотрению
                     }
                 }
-                else
-                {
-                    // Если компонент CharacterJoint отсутствует на новом сегменте, нужно обработать этот случай
-                    // Можно вывести отладочное сообщение или предпринять другие действия по вашему усмотрению
-                }
+
 
                 // Присоединяем новый сегмент к предыдущему
                 newSegment.GetComponent<CharacterJoint>().connectedBody = lastSegment.GetComponent<Rigidbody>();
@@ -89,7 +85,3 @@ public class RopeCollisionHandlerEnemy : MonoBehaviour
         }
     }
 }
-
-
-
-
