@@ -8,16 +8,13 @@ public class RopeCollisionHandler : MonoBehaviour
 
     public GameObject Part;
     private List<GameObject> segments = new List<GameObject>();
-
     public RopeSpawn ropeSpawn;
-
 
     private void OnCollisionEnter(Collision collision)
     {
 
         if (collision.gameObject.CompareTag("Food"))
         {
-            // Уничтожаем объект "Food"
             Destroy(collision.gameObject);
 
             // Создаем новый сегмент веревки
@@ -37,11 +34,13 @@ public class RopeCollisionHandler : MonoBehaviour
                     newSegmentCharacterJoint.autoConfigureConnectedAnchor = false;
 
                     // Настроим connectedAnchor по вашим требованиям
-                    // Например:
                     newSegmentCharacterJoint.connectedAnchor = new Vector3(0.0f, -1.0f, 0.0f);
                 }
 
                 newSegmentCharacterJoint.connectedBody = lastSegment;
+                GameObject ParentElement = GameObject.FindGameObjectWithTag("PlayerParent");
+                newSegmentCharacterJoint.transform.parent = ParentElement.transform;
+
             }
 
             
@@ -61,7 +60,7 @@ public class RopeCollisionHandler : MonoBehaviour
                     newSegmentCharacterJoint.autoConfigureConnectedAnchor = false;
 
                     // Настроим connectedAnchor по вашим требованиям
-                    // Например:
+
                     newSegmentCharacterJoint.connectedAnchor = new Vector3(0.0f, -1.0f, 0.0f);
 
                     if (lastSegmentRigidbody != null)
@@ -69,24 +68,88 @@ public class RopeCollisionHandler : MonoBehaviour
                         // Устанавливаем свойство connectedBody для CharacterJoint
                         newSegmentCharacterJoint.connectedBody = lastSegmentRigidbody;
                     }
-                    else
-                    {
-                        // Если компонент Rigidbody отсутствует на последнем сегменте, нужно обработать этот случай
-                        // Можно вывести отладочное сообщение или предпринять другие действия по вашему усмотрению
-                    }
-                }
-                else
-                {
-                    // Если компонент CharacterJoint отсутствует на новом сегменте, нужно обработать этот случай
-                    // Можно вывести отладочное сообщение или предпринять другие действия по вашему усмотрению
+
                 }
 
                 // Присоединяем новый сегмент к предыдущему
                 newSegment.GetComponent<CharacterJoint>().connectedBody = lastSegment.GetComponent<Rigidbody>();
+
+                GameObject ParentElement = GameObject.FindGameObjectWithTag("PlayerParent");
+                newSegmentCharacterJoint.transform.parent = ParentElement.transform;
             }
 
             segments.Add(newSegment);
         }
+
+        if (collision.gameObject.CompareTag("Player1"))
+        {
+            GameObject[] playerObjects = GameObject.FindGameObjectsWithTag("Player");
+            GameObject[] playerEnemyObjects = GameObject.FindGameObjectsWithTag("Player1");
+            // Получаем количество элементов в RopeSpawnEnemy
+            int countEnemy = playerEnemyObjects.Length;
+
+            // Получаем количество элементов в RopeSpawn
+            int count = playerObjects.Length;
+
+            GameObject ParentElement = GameObject.FindGameObjectWithTag("PlayerParent");
+
+
+            //сравниваем количество элементов
+
+            if (countEnemy > count)
+            {
+                Debug.Log("RopespawnEnemy имеет больше элементов." + count.ToString() + countEnemy.ToString());
+
+            }
+            else if (countEnemy < count)
+            {
+                Debug.Log("RopeSpawn имеет больше элементов." + count.ToString() + countEnemy.ToString());
+
+
+                // Проходим по всем объектам с тегом "Player1" и уничтожаем их
+                foreach (GameObject playerEnemyObject in playerEnemyObjects)
+                {
+                    Destroy(playerEnemyObject);
+                }
+
+                Debug.Log("Уничтожено " + countEnemy.ToString() + " объектов с тегом 'Player1'.");
+
+                // Теперь убедимся, что дочерние объекты Player1 также уничтожены
+                foreach (Transform child in ParentElement.transform)
+                {
+                    if (child.CompareTag("Player1"))
+                    {
+                        Destroy(child.gameObject);
+                    }
+                }
+
+
+            }
+            else
+            {
+                Debug.Log("ropespawnenemy и ropespawn имеют одинаковое количество элементов." + count.ToString() + countEnemy.ToString());
+            }
+
+
+
+
+
+
+
+
+
+
+            
+
+            
+        }
+
+
+
+
+
+
+
     }
 }
 

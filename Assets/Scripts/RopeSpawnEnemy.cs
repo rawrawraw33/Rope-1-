@@ -8,7 +8,7 @@ public class RopeSpawnEnemy : MonoBehaviour
     GameObject partPrefab, parentObject;
 
     [SerializeField]
-    [Range(1, 1000)]
+    [Range(1, 50)]
     int length = 6;
 
     [SerializeField]
@@ -54,6 +54,9 @@ public class RopeSpawnEnemy : MonoBehaviour
             tmp.transform.eulerAngles = new Vector3(180, 0, 0);
             tmp.name = parentObject.transform.childCount.ToString();
 
+
+
+
             if (x == 0)
             {
                 Destroy(tmp.GetComponent<CharacterJoint>());
@@ -84,11 +87,17 @@ public class RopeSpawnEnemy : MonoBehaviour
         {
             if (previousSegment != null)
             {
-                parentObject.transform.Find((parentObject.transform.childCount).ToString()).GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+                parentObject.transform.Find((parentObject.transform.childCount - 1).ToString()).GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
             }
         }
     }
 
+    // В скрипте RopeSpawnEnemy
+    public int GetSegmentCount()
+    {
+        // Возвращаем количество дочерних объектов (сегментов веревки) у parentObject
+        return parentObject.transform.childCount;
+    }
 
 
 

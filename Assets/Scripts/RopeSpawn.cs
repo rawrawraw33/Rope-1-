@@ -8,7 +8,7 @@ public class RopeSpawn : MonoBehaviour
     GameObject partPrefab, parentObject;
 
     [SerializeField]
-    [Range(1, 1000)]
+    [Range(1, 50)]
     int length = 1;
 
     [SerializeField]
@@ -90,5 +90,12 @@ public class RopeSpawn : MonoBehaviour
             }
         }
     }
+    // В скрипте RopeSpawnEnemy
+    public int GetSegmentCount()
+    {
+        // Возвращаем количество дочерних объектов (сегментов веревки) у parentObject
+        return parentObject.transform.childCount;
+    }
+
 
 }

@@ -42,6 +42,8 @@ public class RopeCollisionHandlerEnemy : MonoBehaviour
                 }
 
                 newSegmentCharacterJoint.connectedBody = lastSegment;
+                GameObject ParentElement = GameObject.FindGameObjectWithTag("PlayerParent1");
+                newSegmentCharacterJoint.transform.parent = ParentElement.transform;
             }
 
             
@@ -77,8 +79,12 @@ public class RopeCollisionHandlerEnemy : MonoBehaviour
                 }
 
 
+
                 // Присоединяем новый сегмент к предыдущему
                 newSegment.GetComponent<CharacterJoint>().connectedBody = lastSegment.GetComponent<Rigidbody>();
+
+                GameObject ParentElement = GameObject.FindGameObjectWithTag("PlayerParent1");
+                newSegmentCharacterJoint.transform.parent = ParentElement.transform;
             }
 
             segments.Add(newSegment);
