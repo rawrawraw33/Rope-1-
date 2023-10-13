@@ -4,66 +4,61 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-    public float moveSpeed = 0.2f; // Скорость движения веревки к еде
+    public float moveSpeed = 0.2f; // Скорость движения веревки к целям
     public string foodTag = "Food"; // Тег объектов с едой
 
     private List<Transform> foodTargets = new List<Transform>(); // Список целей с едой
     private Transform currentFoodTarget; // Текущая цель с едой
+    private bool shouldChasePlayer = false; // Переменная для решения, следует ли преследовать игрока
 
     void Start()
     {
-        // Находим все объекты с тегом "Food" и добавляем их в список целей
-        GameObject[] foodObjects = GameObject.FindGameObjectsWithTag(foodTag);
-        foreach (GameObject foodObject in foodObjects)
-        {
-            foodTargets.Add(foodObject.transform);
-        }
-
-        // Находим ближайший объект с едой
-        FindNextFoodTarget();
+        // Обновляем список foodTargets в начале игры
+        UpdateFoodTargets();
     }
 
     void Update()
     {
-        if (currentFoodTarget != null)
+        GameObject[] playerObjects = GameObject.FindGameObjectsWithTag("Player");
+        GameObject[] playerEnemyObjects = GameObject.FindGameObjectsWithTag("Player1");
+        int countEnemy = playerEnemyObjects.Length;
+        int count = playerObjects.Length;
+
+        // Проверка, следует ли преследовать игрока
+        shouldChasePlayer = countEnemy > count;
+
+        if (shouldChasePlayer)
         {
-            // Вычисляем направление к текущей цели с едой
-            Vector3 direction = (currentFoodTarget.position - transform.position).normalized;
-
-            // Перемещаем веревку в направлении текущей цели
-            transform.position += direction * moveSpeed * Time.deltaTime;
-
-            // Проверяем расстояние до текущей цели
-            float distanceToTarget = Vector3.Distance(transform.position, currentFoodTarget.position);
-            if (distanceToTarget < 0.1f)
-            {
-                // Если достигли текущей цели, удаляем ее из списка
-                foodTargets.Remove(currentFoodTarget);
-
-                // Находим следующую ближайшую цель с едой
-                FindNextFoodTarget();
-            }
+            FindNextFoodTargetPlayer(); // Если следует преследовать игрока
         }
         else
         {
-            // Если больше нет объектов с едой, сбрасываем текущую цель
-            // и продолжаем двигаться в том же направлении, если есть другие цели
-            FindNextFoodTarget();
+            FindNextFoodTarget(); // Если следует преследовать цели "Food"
+        }
+
+        // Оставшаяся логика для движения
+        if (currentFoodTarget != null)
+        {
+            Vector3 direction = (currentFoodTarget.position - transform.position).normalized;
+            transform.position += direction * moveSpeed * Time.deltaTime;
+            float distanceToTarget = Vector3.Distance(transform.position, currentFoodTarget.position);
+
+            if (distanceToTarget < 0.1f)
+            {
+                foodTargets.Remove(currentFoodTarget);
+            }
         }
     }
-
 
     void FindNextFoodTarget()
     {
         if (foodTargets.Count > 0)
         {
-            // Находим ближайший объект с едой из оставшихся целей
             Transform closestFood = null;
             float closestDistance = Mathf.Infinity;
 
             foreach (Transform foodTarget in foodTargets)
             {
-                // Проверяем, что foodTarget не равен null, чтобы избежать ошибки
                 if (foodTarget != null)
                 {
                     float distance = Vector3.Distance(transform.position, foodTarget.position);
@@ -76,36 +71,51 @@ public class EnemyController : MonoBehaviour
                 }
             }
 
-            // Добавляем условие для выбора игрока с наибольшим количеством частей
-            GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-            foreach (GameObject player in players)
-            {
-                int playerSegmentCount = player.transform.childCount;
-                if (playerSegmentCount > foodTargets.Count)
-                {
-                    closestFood = player.transform; // Этот игрок становится целью с едой
-                }
-            }
-
-            currentFoodTarget = closestFood;
+            currentFoodTarget = closestFood; // Устанавливаем текущую цель
         }
         else
         {
-            // Если больше нет объектов с едой, сбрасываем текущую цель
             currentFoodTarget = null;
         }
-
     }
 
+    void FindNextFoodTargetPlayer()
+    {
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
 
+        if (players.Length > 0)
+        {
+            Transform closestPlayer = null;
+            float closestDistance = Mathf.Infinity;
 
+            foreach (GameObject player in players)
+            {
+                float distance = Vector3.Distance(transform.position, player.transform.position);
 
+                if (distance < closestDistance)
+                {
+                    closestPlayer = player.transform;
+                    closestDistance = distance;
+                }
+            }
 
+            currentFoodTarget = closestPlayer; // Устанавливаем игрока как цель
+        }
+        else
+        {
+            currentFoodTarget = null;
+        }
+    }
 
+    void UpdateFoodTargets()
+    {
+        // Находим все объекты с тегом "Food" и обновляем список целей
+        GameObject[] foodObjects = GameObject.FindGameObjectsWithTag(foodTag);
+        foodTargets.Clear();
 
-
-
-
-
-
+        foreach (GameObject foodObject in foodObjects)
+        {
+            foodTargets.Add(foodObject.transform);
+        }
+    }
 }
