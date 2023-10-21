@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public float moveSpeed = 0.5f; // Скорость движения змейки
-    public float turnSpeed = 200f; //  скорость поворота
+    public float turnSpeed = 200f; // Скорость поворота
 
     private Transform _transform;
     private Vector3 moveDirection = Vector3.forward;
@@ -28,17 +28,41 @@ public class PlayerController : MonoBehaviour
 
     private void HandleInput()
     {
-        float horizontalInput = Input.GetAxis("Horizontal");
+        float horizontalInput = 0;
 
-        if (horizontalInput < 0)
+        // Проверяем, работаем ли на сенсорном устройстве (мобильное устройство)
+        if (Application.isMobilePlatform)
         {
-            // Повернуть влево
-            _transform.Rotate(Vector3.up, -turnSpeed * Time.deltaTime);
+            // Обрабатываем входные данные для сенсорного устройства
+            if (Input.touchCount > 0)
+            {
+                Touch touch = Input.GetTouch(0);
+
+                if (touch.phase == TouchPhase.Began)
+                {
+                    // Определите, в каком направлении был сделан жест (влево или вправо)
+                    float swipeDirection = touch.deltaPosition.x;
+
+                    if (swipeDirection < 0)
+                    {
+                        // Поворот влево
+                        horizontalInput = -1;
+                    }
+                    else if (swipeDirection > 0)
+                    {
+                        // Поворот вправо
+                        horizontalInput = 1;
+                    }
+                }
+            }
         }
-        else if (horizontalInput > 0)
+        else
         {
-            // Повернуть вправо
-            _transform.Rotate(Vector3.up, turnSpeed * Time.deltaTime);
+            // Обрабатываем входные данные для ПК
+            horizontalInput = Input.GetAxis("Horizontal");
         }
+
+        // Применяем поворот
+        _transform.Rotate(Vector3.up, horizontalInput * turnSpeed * Time.deltaTime);
     }
 }

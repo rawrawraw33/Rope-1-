@@ -64,9 +64,15 @@ public class RopeSpawn : MonoBehaviour
                 }
 
                 PlayerController moveScript = tmp.AddComponent<PlayerController>();
-
                 RopeCollisionHandler collisionHandler = tmp.AddComponent<RopeCollisionHandler>();
                 collisionHandler.Part = partPrefab;
+
+                // Проверяем, есть ли скрипт PlayerController
+                if (moveScript != null)
+                {
+                    // Устанавливаем rotation в ноль
+                    tmp.transform.rotation = Quaternion.identity;
+                }
 
                 // Сохраняем первый сегмент в переменной previousSegment
                 previousSegment = tmp;
@@ -75,7 +81,7 @@ public class RopeSpawn : MonoBehaviour
             {
                 if (previousSegment != null)
                 {
-                    tmp.GetComponent<CharacterJoint>().connectedBody = previousSegment.GetComponent<Rigidbody>();
+                    tmp.GetComponent<CharacterJoint>().connectedBody = previousSegment.GetComponent <Rigidbody>();
                     previousSegment = tmp; // Обновляем previousSegment на текущий сегмент
                 }
             }
@@ -89,6 +95,7 @@ public class RopeSpawn : MonoBehaviour
             }
         }
     }
+
     // В скрипте RopeSpawnEnemy
     public int GetSegmentCount()
     {
