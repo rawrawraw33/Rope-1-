@@ -21,7 +21,7 @@ public class RopeSpawn : MonoBehaviour
     {
         spawn = true;
     }
-
+    public CamMove camMove;
     void Update()
     {
         if (reset)
@@ -60,11 +60,10 @@ public class RopeSpawn : MonoBehaviour
                 if (snapFirst)
                 {
                     tmp.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
-                    PlayerController script = tmp.AddComponent<PlayerController>();
+                    camMove.target = tmp.transform;
                 }
 
                 PlayerController moveScript = tmp.AddComponent<PlayerController>();
-                moveScript.moveSpeed = 5.0f;
 
                 RopeCollisionHandler collisionHandler = tmp.AddComponent<RopeCollisionHandler>();
                 collisionHandler.Part = partPrefab;

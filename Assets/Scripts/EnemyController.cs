@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-    public float moveSpeed = 0.2f; // Скорость движения веревки к целям
+    public float moveSpeed = 0.2f; 
     public string foodTag = "Food"; // Тег объектов с едой
 
     private List<Transform> foodTargets = new List<Transform>(); // Список целей с едой

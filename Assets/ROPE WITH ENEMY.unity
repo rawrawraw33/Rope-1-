@@ -320,6 +320,7 @@ MonoBehaviour:
   spawn: 1
   snapFirst: 1
   snapLast: 0
+  camMove: {fileID: 1385019640}
 --- !u!144 &263338122
 CharacterJoint:
   m_ObjectHideFlags: 0
@@ -578,7 +579,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   partPrefab: {fileID: 1383848926510997443, guid: 51b0f4fe314effe4eab6e4ce1fa75447, type: 3}
   parentObject: {fileID: 1243562337}
-  length: 1
+  length: 7
   partDistance: 0.21
   reset: 0
   spawn: 1
@@ -745,6 +746,7 @@ GameObject:
   - component: {fileID: 1385019639}
   - component: {fileID: 1385019638}
   - component: {fileID: 1385019637}
+  - component: {fileID: 1385019640}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -826,6 +828,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 11.473, y: 0, z: 0}
+--- !u!114 &1385019640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1385019636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0716e3e7f9637c4aabb686a85b213f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  offset: {x: 0, y: 1, z: -1}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
