@@ -4,5 +4,17 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Menu.unity
+    guid: d9b8c49cf0732e34c980ab323bf4dd43
+  - enabled: 1
+    path: Assets/Scenes/ROPE WITH ENEMY 1.unity
+    guid: c83c1f1e0d70a82438399f097c931694
+  - enabled: 1
+    path: Assets/Scenes/ROPE WITH ENEMY 2.unity
+    guid: 6e4ce707d73f60c4cb2cff04ebb9822c
+  - enabled: 1
+    path: Assets/Scenes/ROPE WITH ENEMY 3.unity
+    guid: 6281910eb9ffd3c4f876ad9443dbfc46
   m_configObjects: {}

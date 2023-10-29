@@ -8,7 +8,7 @@ public class RopeCollisionHandlerEnemy : MonoBehaviour
 
     public GameObject Part;
     private List<GameObject> segments = new List<GameObject>();
-
+    bool isFirstSegmentCreated = false;
     public RopeSpawn ropeSpawn;
 
 
@@ -17,53 +17,47 @@ public class RopeCollisionHandlerEnemy : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Food"))
         {
-            // Уничтожаем объект "Food"
             Destroy(collision.gameObject);
 
-            // Создаем новый сегмент веревки
-            GameObject newSegment = Instantiate(Part, transform.position, Quaternion.identity);
-            if (segments.Count == 0)
-
+            if (!isFirstSegmentCreated)
             {
+                // Создаем новый сегмент веревки
+                GameObject newSegment = Instantiate(Part, transform.position, Quaternion.identity);
                 GameObject[] playerObjects = GameObject.FindGameObjectsWithTag("Player1");
 
-                //newsegment is a last element so we need prelast element 
-                Rigidbody lastSegment = playerObjects[playerObjects.Length - 2].GetComponent<Rigidbody>();
-                CharacterJoint newSegmentCharacterJoint = newSegment.GetComponent<CharacterJoint>();
-
-                if (newSegmentCharacterJoint != null)
+                if (playerObjects.Length >= 2)
                 {
+                    //newsegment is the last element so we need the prelast element 
+                    Rigidbody lastSegment = playerObjects[playerObjects.Length - 2].GetComponent<Rigidbody>();
+                    CharacterJoint newSegmentCharacterJoint = newSegment.GetComponent<CharacterJoint>();
 
-                    newSegmentCharacterJoint.autoConfigureConnectedAnchor = false;
-
-                    // Настроим connectedAnchor по вашим требованиям
-                    // Например:
-                    newSegmentCharacterJoint.connectedAnchor = new Vector3(0.0f, -1.0f, 0.0f);
+                    if (newSegmentCharacterJoint != null)
+                    {
+                        newSegmentCharacterJoint.autoConfigureConnectedAnchor = false;
+                        // Настроим connectedAnchor по вашим требованиям
+                        newSegmentCharacterJoint.connectedAnchor = new Vector3(0.0f, -1.0f, 0.0f);
+                    }
+                    newSegmentCharacterJoint.connectedBody = lastSegment;
+                    GameObject ParentElement = GameObject.FindGameObjectWithTag("PlayerParent1");
+                    newSegmentCharacterJoint.transform.parent = ParentElement.transform;
+                    segments.Add(newSegment);
+                    isFirstSegmentCreated = true;
                 }
-
-                newSegmentCharacterJoint.connectedBody = lastSegment;
-                GameObject ParentElement = GameObject.FindGameObjectWithTag("PlayerParent1");
-                newSegmentCharacterJoint.transform.parent = ParentElement.transform;
             }
-
-            
-            // Настраиваем позицию нового сегмента и компоненты, как вам нужно
-            if (segments.Count > 0)
+            else if (segments.Count > 0)
             {
                 // Находим последний сегмент в списке сегментов
                 GameObject lastSegment = segments[segments.Count - 1];
+                GameObject newSegment = Instantiate(Part, lastSegment.transform.position, Quaternion.identity);
 
                 // Получаем компонент CharacterJoint на новом сегменте
                 CharacterJoint newSegmentCharacterJoint = newSegment.GetComponent<CharacterJoint>();
-
                 if (newSegmentCharacterJoint != null)
                 {
                     // Получаем компонент Rigidbody на последнем сегменте
                     Rigidbody lastSegmentRigidbody = lastSegment.GetComponent<Rigidbody>();
                     newSegmentCharacterJoint.autoConfigureConnectedAnchor = false;
-
                     // Настроим connectedAnchor по вашим требованиям
-                    // Например:
                     newSegmentCharacterJoint.connectedAnchor = new Vector3(0.0f, -1.0f, 0.0f);
 
                     if (lastSegmentRigidbody != null)
@@ -71,14 +65,8 @@ public class RopeCollisionHandlerEnemy : MonoBehaviour
                         // Устанавливаем свойство connectedBody для CharacterJoint
                         newSegmentCharacterJoint.connectedBody = lastSegmentRigidbody;
                     }
-                    else
-                    {
-                        // Если компонент Rigidbody отсутствует на последнем сегменте, нужно обработать этот случай
-                        // Можно вывести отладочное сообщение или предпринять другие действия по вашему усмотрению
-                    }
+                    segments.Add(newSegment);
                 }
-
-
 
                 // Присоединяем новый сегмент к предыдущему
                 newSegment.GetComponent<CharacterJoint>().connectedBody = lastSegment.GetComponent<Rigidbody>();
@@ -86,9 +74,12 @@ public class RopeCollisionHandlerEnemy : MonoBehaviour
                 GameObject ParentElement = GameObject.FindGameObjectWithTag("PlayerParent1");
                 newSegmentCharacterJoint.transform.parent = ParentElement.transform;
             }
-
-            segments.Add(newSegment);
         }
+
+
+
+
+
         if (collision.gameObject.CompareTag("Player"))
         {
             GameObject[] playerObjects = GameObject.FindGameObjectsWithTag("Player1");

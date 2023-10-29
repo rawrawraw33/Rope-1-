@@ -63,13 +63,19 @@ public class RopeSpawnEnemy : MonoBehaviour
                 if (snapFirst)
                 {
                     tmp.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
-                    EnemyController script = tmp.AddComponent<EnemyController>();
+                    
                 }
 
+                EnemyController script = tmp.AddComponent<EnemyController>();
+                RopeCollisionHandlerEnemy collisionHandlerEnemy = tmp.AddComponent<RopeCollisionHandlerEnemy>();
+                collisionHandlerEnemy.Part = partPrefab;
 
-
-                RopeCollisionHandlerEnemy collisionHandler = tmp.AddComponent<RopeCollisionHandlerEnemy>();
-                collisionHandler.Part = partPrefab;
+                // Проверяем, есть ли скрипт PlayerController
+                if (collisionHandlerEnemy != null)
+                {
+                    // Устанавливаем rotation в ноль
+                    tmp.transform.rotation = Quaternion.identity;
+                }
 
                 // Сохраняем первый сегмент в переменной previousSegment
                 previousSegment = tmp;
