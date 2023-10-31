@@ -12,12 +12,15 @@ public class MainMenu : MonoBehaviour
     void Start()
     {
         levelUnLock = PlayerPrefs.GetInt("level", 1);
+        Debug.Log("установилось значение анлок левел ");
         for (int i = 0; i < buttons.Length; i++)
         {
+            Debug.Log("зашли в 1 фор");
             buttons[i].interactable = false;
         }
         for (int i = 0; i < levelUnLock; i++)
         {
+            Debug.Log("зашли в 2 фор");
             buttons[i].interactable = true;
         }
     }
@@ -26,18 +29,6 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene(levelIndex);
     }
 
-    public void UnlockLevel()
-    {
-        int currentLevel = SceneManager.GetActiveScene().buildIndex;
-        if (currentLevel >= PlayerPrefs.GetInt("level"))
-        {
-            PlayerPrefs.SetInt("level", currentLevel + 1);
-            PlayerPrefs.Save(); // Сохраняем изменения в PlayerPrefs
-        }
-    }
 
-    public void ExitGame()
-    {
-        Application.Quit();
-    }
+
 }
