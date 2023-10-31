@@ -247,7 +247,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectPrefab: {fileID: 5872087905010368785, guid: 9fdca9d60b22da84c96f53aeb2d834e5, type: 3}
-  numberOfObjects: 20
+  numberOfObjects: 1
   spawnArea: {x: 10, y: 10}
   spawnRangeX: {x: -5, y: 5}
   spawnRangeZ: {x: -5, y: 5}

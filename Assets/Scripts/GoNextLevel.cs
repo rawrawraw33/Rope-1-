@@ -31,12 +31,13 @@ public class GoNextLevel : MonoBehaviour
     public void UnlockLevel()
     {
         int currentLevel = SceneManager.GetActiveScene().buildIndex;
-        Debug.Log("Зашли в UnlockLevel(GoNextLevels) ");
+        Debug.Log("Зашли в UnlockLevel(GoNextLevel) ");
         if (currentLevel >= PlayerPrefs.GetInt("level"))
         {
-            Debug.Log("Зашли в иф UnlockLevel(GoNextLevels) ");
+            Debug.Log("Зашли в иф UnlockLevel(GoNextLevel) ");
             PlayerPrefs.SetInt("level", currentLevel + 1);
             PlayerPrefs.Save(); // Сохраняем изменения в PlayerPrefs
+
         }
     }
 }
